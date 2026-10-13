@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#1c1c1f">
+    <title>Mandla's Tech...</title>
+    <link rel="preload" href="vendor/fonts/poppins-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="vendor/fa/css/fontawesome.min.css">
+    <link rel="stylesheet" href="vendor/fa/css/solid.min.css">
+    <link rel="stylesheet" href="vendor/fa/css/regular.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Full-page spinning neon border -->
+    <div class="neon-frame" aria-hidden="true"><i class="t"></i><i class="b"></i><i class="l"></i><i class="r"></i></div>
+
+    <!-- ================= TITLE BAR + MAIN TABS ================= -->
+    <div class="site-head">
+        <header class="topbar">
+            <button type="button" class="hbtn" id="backBtn" hidden aria-label="Go back"><i class="fa-solid fa-arrow-left"></i></button>
+            <a href="#/home" class="brand"><i class="fa-solid fa-bolt"></i><span>Mandla's Tech...</span></a>
+
+            <div class="top-actions">
+                <div class="search-box">
+                    <input type="search" id="searchInput" placeholder="Search products..." aria-label="Search products">
+                    <div class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+                </div>
+
+                <button type="button" class="hbtn pill" id="accountBtn" aria-label="Log in">
+                    <i class="fa-solid fa-user"></i><span class="hide-sm">Log in</span>
+                </button>
+
+                <!-- Profile picture (with the verified tick) and its menu -->
+                <div class="profile-wrap" id="profileWrap" hidden>
+                    <button type="button" class="profile-btn" id="profileBtn" aria-haspopup="true" aria-label="Your account"></button>
+                    <div class="profile-menu" id="profileMenu" hidden>
+                        <div class="menu-head"><strong id="menuName"></strong><small class="muted" id="menuEmail"></small></div>
+                        <a href="#/settings"><i class="fa-solid fa-gear"></i> Settings</a>
+                        <a href="#/wallet"><i class="fa-solid fa-wallet"></i> Wallet</a>
+                        <a href="#/inbox/store"><i class="fa-solid fa-store"></i> My store</a>
+                        <a href="#/inbox/orders"><i class="fa-solid fa-box"></i> My orders</a>
+                        <a href="#/admin" id="menuAdmin" hidden><i class="fa-solid fa-user-shield"></i> Payout desk</a>
+                        <button type="button" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Log out</button>
+                    </div>
+                </div>
+
+                <button type="button" class="hbtn" id="favBtn" aria-label="My favourites">
+                    <i class="fa-solid fa-heart"></i>
+                    <span class="badge" id="favCount" hidden>0</span>
+                </button>
+
+                <button type="button" class="hbtn primary" id="cartBtn" aria-label="Open cart">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span class="badge" id="cartCount">0</span>
+                </button>
+            </div>
+        </header>
+
+        <nav class="main-tabs" id="mainTabs" aria-label="Main">
+            <a href="#/home" data-route="home"><i class="fa-solid fa-house"></i><span>Home</span></a>
+            <a href="#/explore" data-route="explore"><i class="fa-regular fa-compass"></i><span>Explore</span></a>
+            <a href="#/sell" data-route="sell"><i class="fa-solid fa-circle-plus"></i><span>Sell</span></a>
+            <a href="#/inbox" data-route="inbox"><i class="fa-regular fa-envelope"></i><span>Inbox</span><b class="tab-badge" id="inboxBadge" hidden>0</b></a>
+        </nav>
+    </div>
+
+    <main>
+        <!-- ================= HOME ================= -->
+        <section class="view" id="view-home">
+            <!-- Technology we offer (top of the site) -->
+            <div class="section tech-strip-section" id="techStripSection">
+                <h2 class="section-title"><i class="fa-solid fa-microchip"></i> Technology we offer</h2>
+                <div class="tech-row" id="techRow" role="group" aria-label="Filter by type of technology"></div>
+            </div>
+
+            <div class="section" id="brandsSection">
+                <h2 class="section-title"><i class="fa-solid fa-tag"></i> Brands</h2>
+                <div class="chip-row" id="brandRow"></div>
+            </div>
+
+            <div class="section" id="forYou">
+                <div class="section-head">
+                    <h2 class="section-title">For you</h2>
+                    <div class="pills" id="filterPills"></div>
+                </div>
+                <div class="grid" id="productGrid" aria-live="polite"></div>
+                <div class="center"><button type="button" class="btn" id="loadMore" hidden>Load more</button></div>
+            </div>
+
+            <div class="section" id="technology">
+                <h2 class="section-title"><i class="fa-solid fa-microchip"></i> Technology</h2>
+                <p class="muted section-sub">Pick a type of technology to see what's for sale.</p>
+                <div class="cat-grid" id="categoryGrid"></div>
+            </div>
+        </section>
+
+        <!-- ================= EXPLORE (stores) ================= -->
+        <section class="view" id="view-explore" hidden>
+            <div class="section">
+                <h2 class="section-title"><i class="fa-solid fa-store"></i> Stores</h2>
+                <p class="muted section-sub">Every seller on Mandla's Tech... has their own store.</p>
+                <div class="grid" id="storeGrid"></div>
+            </div>
+        </section>
+
+        <!-- ================= SINGLE STORE ================= -->
+        <section class="view" id="view-store" hidden>
+            <div class="section">
+                <div id="storeHeader"></div>
+                <div class="grid" id="storeProducts"></div>
+            </div>
+        </section>
+
+        <!-- ================= SELL ================= -->
+        <section class="view" id="view-sell" hidden>
+            <div class="section narrow">
+                <!-- Step 1: create your store -->
+                <div class="container-form" id="sellStoreBox" hidden>
+                    <div class="form-header">
+                        <i class="fa-solid fa-store"></i>
+                        <h2>Open your store</h2>
+                        <h3>Name it once, then list as many items as you like.</h3>
+                    </div>
+                    <form class="register-form" id="storeForm" novalidate>
+                        <div class="input-group">
+                            <label for="storeName">Store name</label>
+                            <div class="input-field">
+                                <i class="fa-solid fa-store"></i>
+                                <input type="text" id="storeName" maxlength="40" placeholder="e.g. Bloem Tech Deals" required>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label for="storeDesc">About your store</label>
+                            <div class="input-field textarea">
+                                <textarea id="storeDesc" maxlength="300" rows="3" placeholder="What do you sell?"></textarea>
+                            </div>
+                        </div>
+                        <div class="error-msg" id="storeError" role="alert"></div>
+                        <button type="submit" class="btn-signup">Create store</button>
+                    </form>
+                </div>
+
+                <!-- Step 2: list an item -->
+                <div class="container-form" id="sellProductBox" hidden>
+                    <div class="form-header">
+                        <i class="fa-solid fa-tag"></i>
+                        <h2>List an item</h2>
+                        <h3 id="sellAs"></h3>
+                    </div>
+                    <form class="register-form" id="productForm" novalidate>
+                        <div class="input-group">
+                            <label for="pImages">Photos (1 to 4)</label>
+                            <input type="file" id="pImages" accept="image/*" multiple>
+                            <div class="image-previews" id="imagePreview"></div>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="pTitle">Title</label>
+                            <div class="input-field">
+                                <input type="text" id="pTitle" maxlength="80" placeholder="e.g. Lenovo ThinkPad T480, 8GB RAM" required>
+                            </div>
+                        </div>
+
+                        <div class="field-row">
+                            <div class="input-group">
+                                <label for="pPrice">Price (R)</label>
+                                <div class="input-field"><input type="number" id="pPrice" min="1" max="1000000" step="1" placeholder="2500" required></div>
+                            </div>
+                            <div class="input-group">
+                                <label for="pQty">In stock</label>
+                                <div class="input-field"><input type="number" id="pQty" min="1" max="99" step="1" value="1" required></div>
+                            </div>
+                        </div>
+
+                        <div class="field-row">
+                            <div class="input-group">
+                                <label for="pCategory">Type of technology</label>
+                                <div class="input-field"><select id="pCategory" required></select></div>
+                            </div>
+                            <div class="input-group">
+                                <label for="pCondition">Condition</label>
+                                <div class="input-field">
+                                    <select id="pCondition">
+                                        <option value="new">New</option>
+                                        <option value="like-new">Like new</option>
+                                        <option value="good" selected>Good</option>
+                                        <option value="fair">Fair</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="pBrand">Brand</label>
+                            <div class="input-field"><input type="text" id="pBrand" maxlength="40" placeholder="e.g. Lenovo"></div>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="pDesc">Description</label>
+                            <div class="input-field textarea">
+                                <textarea id="pDesc" maxlength="1000" rows="4" placeholder="Specs, battery health, what's included, any damage..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="error-msg" id="productError" role="alert"></div>
+                        <button type="submit" class="btn-signup">Publish listing</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= INBOX ================= -->
+        <section class="view" id="view-inbox" hidden>
+            <div class="section">
+                <h2 class="section-title"><i class="fa-regular fa-envelope"></i> Inbox</h2>
+                <div class="subtabs" id="inboxTabs" role="tablist"></div>
+                <div id="inboxContent"></div>
+            </div>
+        </section>
+
+        <!-- ================= SETTINGS ================= -->
+        <section class="view" id="view-settings" hidden>
+            <div class="section narrow">
+                <h2 class="section-title"><i class="fa-solid fa-gear"></i> Settings</h2>
+                <div id="settingsRoot"></div>
+            </div>
+        </section>
+
+        <!-- ================= WALLET ================= -->
+        <section class="view" id="view-wallet" hidden>
+            <div class="section narrow">
+                <h2 class="section-title"><i class="fa-solid fa-wallet"></i> Wallet</h2>
+                <div id="walletRoot"></div>
+            </div>
+        </section>
+
+        <!-- ================= PAYOUT DESK (admins only) ================= -->
+        <section class="view" id="view-admin" hidden>
+            <div class="section narrow">
+                <h2 class="section-title"><i class="fa-solid fa-user-shield"></i> Payout desk</h2>
+                <div id="adminRoot"></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ================= CART DRAWER ================= -->
+    <div class="backdrop" id="cartBackdrop" hidden></div>
+    <aside class="cart-drawer" id="cartDrawer" aria-label="Shopping cart" aria-hidden="true">
+        <div class="drawer-head">
+            <h2>Your cart</h2>
+            <button type="button" class="icon-btn" id="closeCart" aria-label="Close cart"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="cart-items" id="cartItems"></div>
+        <div class="drawer-foot">
+            <div class="total-row"><span>Total</span><strong id="cartTotal">R0</strong></div>
+            <button type="button" class="btn btn-primary btn-wide" id="checkoutBtn" disabled>Place order</button>
+            <p class="muted small">You'll be asked to log in or create an account before the order is placed.</p>
+        </div>
+    </aside>
+
+    <!-- ================= PRODUCT DETAIL MODAL ================= -->
+    <div class="modal" id="productModal" hidden role="dialog" aria-modal="true" aria-label="Listing details">
+        <div class="product-box">
+            <button type="button" class="icon-btn modal-close" id="closeProduct" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+            <div id="productDetail"></div>
+        </div>
+    </div>
+
+    <!-- ================= LOGIN / SIGN UP MODAL ================= -->
+    <div class="modal" id="authModal" hidden role="dialog" aria-modal="true" aria-label="Log in or sign up">
+        <div class="card-container">
+            <button type="button" class="icon-btn modal-close" id="closeAuth" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+
+            <div class="container-form" id="signup-panel" hidden>
+                <div class="form-header">
+                    <i class="fa-solid fa-user-plus"></i>
+                    <h2>Create account</h2>
+                    <h3>Join to buy, sell and message.</h3>
+                </div>
+                <form class="register-form" id="registrationForm" novalidate>
+                    <div class="input-group">
+                        <label for="fullName">Full name</label>
+                        <div class="input-field">
+                            <i class="fa-solid fa-user"></i>
+                            <input type="text" id="fullName" name="fullName" placeholder="Enter full name" autocomplete="name" required>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="signupEmail">Email address</label>
+                        <div class="input-field">
+                            <i class="fa-solid fa-envelope"></i>
+                            <input type="email" id="signupEmail" name="email" placeholder="Enter your email" autocomplete="email" required>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="signupPassword">Password</label>
+                        <div class="input-field">
+                            <i class="fa-solid fa-lock"></i>
+                            <input type="password" id="signupPassword" name="password" placeholder="At least 8 characters" autocomplete="new-password" minlength="8" required>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="confirmPassword">Confirm password</label>
+                        <div class="input-field" id="confirmFieldWrapper">
+                            <i class="fa-solid fa-shield-halved"></i>
+                            <input type="password" id="confirmPassword" placeholder="Confirm your password" autocomplete="new-password" required>
+                        </div>
+                        <div class="error-msg" id="passwordError" role="alert"></div>
+                    </div>
+                    <div class="error-msg" id="signupError" role="alert"></div>
+                    <button type="submit" class="btn-signup">Sign up</button>
+                    <div class="form-footer">
+                        <label class="remember-me"><input type="checkbox" name="rememberMe"> Remember me</label>
+                        <div class="signin-redirect">Already have an account?
+                            <button type="button" class="btn-toggle-view" id="showLogin">Log in</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="container-form" id="login-panel">
+                <div class="form-header">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    <h2>Welcome back</h2>
+                    <h3>Log in to continue.</h3>
+                </div>
+                <form class="register-form" id="loginForm" novalidate>
+                    <div class="input-group">
+                        <label for="loginEmail">Email address</label>
+                        <div class="input-field">
+                            <i class="fa-solid fa-envelope"></i>
+                            <input type="email" id="loginEmail" name="email" placeholder="Enter your email" autocomplete="email" required>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="loginPassword">Password</label>
+                        <div class="input-field">
+                            <i class="fa-solid fa-lock"></i>
+                            <input type="password" id="loginPassword" name="password" placeholder="Enter your password" autocomplete="current-password" required>
+                        </div>
+                    </div>
+                    <div class="error-msg" id="loginError" role="alert"></div>
+                    <button type="submit" class="btn-signup">Log in</button>
+                    <div class="form-footer">
+                        <label class="remember-me"><input type="checkbox" name="rememberMe"> Keep me logged in</label>
+                        <div class="signin-redirect">New here?
+                            <button type="button" class="btn-toggle-view" id="showSignup">Sign up</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script defer src="js/core.js"></script>
+    <script defer src="js/lightbox.js"></script>
+    <script defer src="js/verify.js"></script>
+    <script defer src="js/orders.js"></script>
+    <script defer src="js/storetools.js"></script>
+    <script defer src="js/offers.js"></script>
+    <script defer src="js/checkout.js"></script>
+    <script defer src="js/wallet.js"></script>
+    <script defer src="js/settings.js"></script>
+    <script defer src="js/start.js"></script>
+</body>
+</html>

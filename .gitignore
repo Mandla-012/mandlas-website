@@ -1,0 +1,48 @@
+# ##########################################
+# 🔑 SENSITIVE CREDENTIALS (NEVER UPLOAD!)
+# ##########################################
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# ##########################################
+# 📦 DEPENDENCIES & LIBRARIES
+# ##########################################
+node_modules/
+jspm_packages/
+web_modules/
+
+# ##########################################
+# 🚀 BUILD OUTUTS & COMPILED CODE
+# ##########################################
+dist/
+build/
+.next/
+out/
+.nuxt/
+
+# ##########################################
+# 🖥️ OPERATING SYSTEM & EDITOR FILES
+# ##########################################
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# ##########################################
+# 📝 LOGS AND DIAGNOSTICS
+# ##########################################
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.eslintcache
+
